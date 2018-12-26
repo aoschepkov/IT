@@ -1,0 +1,42 @@
+import xlrd
+import sqlite3
+import os
+
+#1 пункт
+#Необходимо создать таблицу по анкетным данным
+
+conn = sqlite3.connect("credits_info.db")
+cursor = conn.cursor()
+cursor.execute("""create table applic_form(id integer,
+    employed_By varchar, 
+    education varchar,
+    children integer,
+    family integer,
+    mar_status varchar,
+    city varchar,
+    state varchar,
+    position varchar,
+    income integer,
+    inc_type varchar,
+    housing varchar,
+    housing_own varchar,
+    car_age integer) """)
+
+ 
+
+
+for a in os.listdir("C:/Users/User/Desktop/Магистратура/IT/анкеты-20181127T200933Z-001/анкеты/"):
+    a1 = "C:/Users/User/Desktop/Магистратура/IT/анкеты-20181127T200933Z-001/анкеты/" + a
+    data = xlrd.open_workbook(a1)
+    sheet = data.sheet_by_index(0)
+
+    feature = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0]
+    what = ['Identity Number', 'Employed By','Education','Children','Family', 'Marital Status', 'City', 'State', 'Position', 'Income', 'Income Type', 'Housing', 'House ownership', 'Age of Car (if owned)']
+    app_row = sheet.nrows
+    app_column = sheet.ncols
+
+    for i in range(app_row):
+        for j in range(app_column):
+            for k in range(14):
+                if sheet.cell(i, j).value == what[k]:
+                    feature[k] = sheet.cell(i + 1, j).value

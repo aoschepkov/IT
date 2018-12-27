@@ -38,8 +38,47 @@ for a in os.listdir("C:/Users/User/Desktop/Магистратура/IT/анке�
                     feature[v] = sheet.cell(i + 1, j).value
 
 sql = "insert into app_form(id, employed_By, education, children, family, mar_status, city, position, income, inc_type, housing, housing_own, car_age) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-    cursor.execute(sql, (feature[0], feature[1], feature[2], feature[3], feature[4], feature[5], feature[6], feature[7],feature[8], feature[9], feature[10]))
+    cursor.execute(sql, (feature[0], feature[1], feature[2], feature[3], feature[4], feature[5], feature[6], feature[7],feature[8], feature[9], feature[10], feature[11], feature[12]))
 
     sql3 = "commit"
     cursor.execute(sql3)
-    print(f)
+    print(a)
+    
+conn.commit()
+
+#Вывод таблицы по анкетным данным
+conn = sqlite3.connect("credits_info.db")
+cursor = conn.cursor()
+sql = "select * from app_form"
+cursor.execute(sql)
+for row in cursor.execute("select rowid, * from app_form"):
+    print(row)
+    
+ #Далее необходимо создать таблицу по контрактам
+conn = sqlite3.connect("credits_info.db")
+cursor = conn.cursor()
+cursor.execute("""create table contracts (id integer,
+               contract_numb text,
+               amount integer,
+               type text,
+               term integer,
+               annuity integer)""")  
+    
+import os
+for a in os.listdir("C:/Users/User/Desktop/Магистратура/IT/контракты-201811275841DVS87C-001/контракты/"):
+    a1 = "C:/Users/User/Desktop/Магистратура/IT/контракты-201811275841DVS87C-001/контракты/" + a
+    data = xlrd.open_workbook(a1)
+    sheet = data.sheet_by_index(0)
+
+    feature = [0, 1, 0, 0, 0, 0]
+    what = ['Identity Number', 'Contract Number', 'Amount', 'Type', 'Term (month)', 'Annuity']
+    contr_row = sheet.nrows
+    contr_column = sheet.ncols
+
+    for i in range(contr_row):
+        for j in range(contr_column):
+            for v in range(6):
+                if sheet.cell(i, j).value == what[v]:
+                    feature[v] = sheet.cell(i + 1, j).value
+    
+    

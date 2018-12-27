@@ -198,8 +198,43 @@ for row in rows:
 
 ### Контракты
 
+con = sqlite3.connect("credits_info.db")
+with con:
+    cursor = con.cursor()
 
+#Сумма кредита больше 0
+cursor.execute("SELECT COUNT(*) FROM contracts WHERE amount < 0")
+contracts_error1 = cursor.fetchone()[0]
+rows = cursor.fetchall()
+if contracts_error1 > 0:
+    print(rows)
+    cursor.execute("DELETE FROM contracts WHERE amount < 0")
+if contracts_error1 == 0:
+    print("Amount data is ok")
 
+#Сумма аннуитета больше 0
+cursor.execute("SELECT COUNT(*) FROM contracts WHERE annuity < 0")
+contracts_error2 = cursor.fetchone()[0]
+rows = cursor.fetchall()
+if contracts_error2 > 0:
+    print(rows)
+    cursor.execute("DELETE FROM contracts WHERE annuity < 0")
+if contracts_error2 == 0:
+    print("Annuity data is ok")
+    
+    
+#Срок кредита больше 0
+cursor.execute("SELECT COUNT(*) FROM contracts WHERE term < 0")
+contracts_error3 = cursor.fetchone()[0]
+rows = cursor.fetchall()
+if contracts_error3 > 0:
+    print(rows)
+    cursor.execute("DELETE FROM contracts WHERE term < 0")
+if contracts_error3 == 0:
+    print("Term data is ok")
 
-
-
+#Нарушение единства обозначений type
+cursor.execute("SELECT type, COUNT(type) FROM contracts GROUP BY type")
+rows = cursor.fetchall()
+for row in rows:
+    print(row)

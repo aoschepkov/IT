@@ -2,7 +2,8 @@ import xlrd
 import sqlite3
 import os
 
-#1 пункт
+###### 1 пункт
+
 #Необходимо создать таблицу по анкетным данным
 
 conn = sqlite3.connect("credits_info.db")
@@ -81,4 +82,124 @@ for a in os.listdir("C:/Users/User/Desktop/Магистратура/IT/конт�
                 if sheet.cell(i, j).value == what[v]:
                     feature[v] = sheet.cell(i + 1, j).value
     
+   # SQL
+    sql = "insert into contracts(id, contract_numb, amount, type, term, annuity) VALUES (?, ?, ?, ?, ?, ?)"
+    cursor.execute(sql, (feature[0], feature[1], feature[2], feature[3], feature[4], feature[5]))
+
+    sql4 = "commit"
+    cursor.execute(sql4)
+    print(a)
+
+conn.commit()  
+
+
+#Вывод таблицы по контрактам
+
+conn = sqlite3.connect("credits_info.db")
+cursor = conn.cursor()
+sql = "SELECT * FROM contracts"
+    cursor.execute(sql)
+    for row in cursor.execute("SELECT rowid, * from contract"):
+        print(row)
+
+
+
+#Необходимо объединить таблицы по анкетным данным и контрактам
+
+import sqlite3
+con = sqlite3.connect("credita_info.db")
+with con:
+    cursor = con.cursor()
+    cursor.execute("SELECT * FROM app_form INNER JOIN contracts ON app_form.id = contracts.id")
+    rows = cursor.fetchall()
+for row in rows:
+        print (row)
+
+con.commit()
+
+
+con = sqlite3.connect("credits_info.db")
+cursor = con.cursor()
+sql = "SELECT * FROM app_form"
+cursor.execute(sql)
+for row in cursor.execute("SELECT rowid, * from app_form"):
+    print(row)
+con.commit()
+
+
+
+##### 2 пункт
+#### Проверка корректности значений в таблицах
+### Анкеты
+
+con = sqlite3.connect("credit.db")
+with con:
+    cursor = con.cursor()
+
+#Поле children должно содержать только положительные значения
+
+cursor.execute("SELECT COUNT(*) FROM app_form WHERE children < 0")
+app_form_error1 = cursor.fetchone()[0]
+rows = cursor.fetchall()
+if app_form_error1 > 0:
+    cursor.execute("DELETE FROM app_form WHERE children < 0")
+else:
+    print("Children data is ok")
+
+
+#Аналогично для family
+cursor.execute("SELECT COUNT(*) FROM app_form WHERE family < 0")
+app_form_error2 = cursor.fetchone()[0]
+rows = cursor.fetchall()
+if app_form_error2 > 0:
+    cursor.execute("DELETE FROM app_form WHERE family < 0")
+else:
+    print("Family data is ok")
+
+
+#income также не может быть меньше 0
+cursor.execute("SELECT COUNT(*) FROM app_form WHERE income < 0")
+app_form_error3 = cursor.fetchone()[0]
+rows = cursor.fetchall()
+if app_form_error3 > 0:
+    cursor.execute("DELETE FROM app_form WHERE income < 0")
+else:
+    print("Income data is ok")
     
+    
+#Нарушение единства обозначений housing
+cursor.execute("SELECT housing, COUNT(housing) FROM app_form GROUP BY housing")
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
+
+
+#Нарушение единства обозначений mar_status
+cursor.execute("SELECT mar_status, COUNT(mar_status) FROM app_form GROUP BY mar_status")
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
+
+cursor.execute("UPDATE app_form SET mar_status = 'no data' WHERE  mar_status IS NULL")
+
+
+#Нарушение единства обозначений education
+cursor.execute("SELECT education, COUNT(educaction) FROM app_form GROUP BY education")
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
+
+#Нарушение единства обозначений employed_By
+cursor.execute("SELECT employed_By, COUNT(employed_By) FROM app_form GROUP BY employed_By")
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
+
+
+### Контракты
+
+
+
+
+
+

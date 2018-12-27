@@ -265,3 +265,42 @@ cursor.execute("UPDATE contracts SET type = '0' WHERE type = 'Revolving loans'")
 conn.commit()
 
 
+#Результирующая таблица
+conn = sqlite3.connect("credits_info.db")
+cursor = conn.cursor()
+cursor.execute("""create table data1 (id integer,
+    employed_By varchar, 
+    education varchar,
+    children integer,
+    family integer,
+    mar_status varchar,
+    city varchar,
+    position varchar,
+    income integer,
+    inc_type varchar,
+    housing varchar,
+    housing_own varchar,
+    car_age integer, 
+    contract_numb text,
+    amount integer,
+    type integer,
+    term integer,
+    annuity integer)""")
+cursor.execute("INSERT INTO data1 (id, employed_By, education, children, family, mar_status, city, position, income, inc_type, housing, housing_own, contract_numb, amount, type, term, annuity) SELECT id, employed_By, education, children, family, mar_status, city, position, income, inc_type, housing, housing_own, contract_numb, amount, type, term, annuity FROM app_form")
+cursor = conn.cursor()
+sql = "select * from data1"
+cursor.execute(sql)
+for row in cursor.execute("select rowid, * from data1"):
+    print(row)
+
+conn.commit()
+
+#Вывод конечных данных
+conn = sqlite3.connect("credits_info.db")
+cursor = conn.cursor()
+sql = "select * from data1"
+cursor.execute(sql)
+for row in cursor.execute("select rowid, * from data1"):
+    print(row)
+
+conn.commit()

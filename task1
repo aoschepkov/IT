@@ -238,3 +238,30 @@ cursor.execute("SELECT type, COUNT(type) FROM contracts GROUP BY type")
 rows = cursor.fetchall()
 for row in rows:
     print(row)
+
+
+##### 3 пункт
+### Кодирование полей
+
+#Education: 1 - Secondary / secondary special, 2 - Incomplete higher, 3 - Higher education
+cursor.execute("UPDATE app_form SET education = '1' WHERE education = 'Secondary / secondary special'")
+cursor.execute("UPDATE app_form SET education = '2' WHERE education = 'Incomplete higher'")
+cursor.execute("UPDATE app_form SET education = '3' WHERE education = 'Higher education'")
+
+#Marital Status:
+cursor.execute("UPDATE app_form SET mar_status = '0' WHERE mar_status = 'Separated' or mar_status = 'Single / not married' or mar_status = 'Widow'")
+cursor.execute("UPDATE app_form SET mar_status = '1' WHERE mar_status = 'Married' or mar_status = 'Civil marriage'")
+
+#Housing:
+cursor.execute("UPDATE app_form SET housing = '1' WHERE housing = 'House / apartment'")
+cursor.execute("UPDATE app_form SET housing = '0' WHERE housing = 'Municipal apartment' or housing = 'Rented apartment' or housing = 'With parents'")
+
+#Type:
+cursor.execute("UPDATE contracts SET type = '1' WHERE type = 'Cash loans'")
+cursor.execute("UPDATE contracts SET type = '0' WHERE type = 'Revolving loans'")
+
+
+
+conn.commit()
+
+

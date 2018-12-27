@@ -7,14 +7,13 @@ import os
 
 conn = sqlite3.connect("credits_info.db")
 cursor = conn.cursor()
-cursor.execute("""create table applic_form(id integer,
+cursor.execute("""create table app_form(id integer,
     employed_By varchar, 
     education varchar,
     children integer,
     family integer,
     mar_status varchar,
     city varchar,
-    state varchar,
     position varchar,
     income integer,
     inc_type varchar,
@@ -22,21 +21,25 @@ cursor.execute("""create table applic_form(id integer,
     housing_own varchar,
     car_age integer) """)
 
- 
-
-
 for a in os.listdir("C:/Users/User/Desktop/Магистратура/IT/анкеты-20181127T200933Z-001/анкеты/"):
     a1 = "C:/Users/User/Desktop/Магистратура/IT/анкеты-20181127T200933Z-001/анкеты/" + a
     data = xlrd.open_workbook(a1)
     sheet = data.sheet_by_index(0)
 
-    feature = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0]
-    what = ['Identity Number', 'Employed By','Education','Children','Family', 'Marital Status', 'City', 'State', 'Position', 'Income', 'Income Type', 'Housing', 'House ownership', 'Age of Car (if owned)']
+    feature = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    what = ['Identity Number', 'Employed By','Education','Children','Family', 'Marital Status', 'City', 'Position', 'Income', 'Income Type', 'Housing', 'House ownership', 'Age of Car (if owned)']
     app_row = sheet.nrows
     app_column = sheet.ncols
 
     for i in range(app_row):
         for j in range(app_column):
-            for k in range(14):
-                if sheet.cell(i, j).value == what[k]:
-                    feature[k] = sheet.cell(i + 1, j).value
+            for v in range(13):
+                if sheet.cell(i, j).value == what[v]:
+                    feature[v] = sheet.cell(i + 1, j).value
+
+sql = "insert into app_form(id, employed_By, education, children, family, mar_status, city, position, income, inc_type, housing, housing_own, car_age) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    cursor.execute(sql, (feature[0], feature[1], feature[2], feature[3], feature[4], feature[5], feature[6], feature[7],feature[8], feature[9], feature[10]))
+
+    sql3 = "commit"
+    cursor.execute(sql3)
+    print(f)
